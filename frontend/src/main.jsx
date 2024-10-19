@@ -31,6 +31,7 @@ const colors = {
 const theme = extendTheme({ config, styles, colors });
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    {/* it renders every component twice, on development */}
     <RecoilRoot>
       <BrowserRouter>
         <ChakraProvider theme={theme}>

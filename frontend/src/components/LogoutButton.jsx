@@ -3,6 +3,7 @@ import React from "react";
 import { useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
+import { IoLogOutOutline } from "react-icons/io5";
 
 const LogoutButton = () => {
   const showToast = useShowToast();
@@ -35,7 +36,7 @@ const LogoutButton = () => {
       size={"sm"}
       onClick={handleLogout}
     >
-      Logout
+      <IoLogOutOutline size={20} />
     </Button>
   );
 };

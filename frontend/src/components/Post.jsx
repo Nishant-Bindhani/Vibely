@@ -8,8 +8,6 @@ import useShowToast from "../hooks/useShowToast";
 import { formatDistanceToNow } from "date-fns";
 
 const Post = ({ post, postedBy }) => {
-  const [liked, setLiked] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
   const navigate = useNavigate();
@@ -17,11 +15,9 @@ const Post = ({ post, postedBy }) => {
 
   useEffect(() => {
     const getUser = async () => {
-      setLoading(true);
       try {
         const res = await fetch("/api/users/profile/" + postedBy);
         const data = await res.json();
-        console.log(data);
         if (data.error) {
           showToast("Error", data.error, "error");
           return;
@@ -30,8 +26,6 @@ const Post = ({ post, postedBy }) => {
       } catch (error) {
         showToast("Error", error.message, "error");
         setUser(null);
-      } finally {
-        setLoading(false);
       }
     };
     getUser();
@@ -133,17 +127,7 @@ const Post = ({ post, postedBy }) => {
           )}
 
           <Flex gap={3} my={1}>
-            <Actions liked={liked} setLiked={setLiked} />
-          </Flex>
-
-          <Flex gap={2} alignItems={"center"}>
-            <Text color={"gray.light"} fontSize="sm">
-              {post.replies.length} replies
-            </Text>
-            <Box w={0.5} h={0.5} borderRadius={"full"} bg={"gray.light"}></Box>
-            <Text color={"gray.light"} fontSize="sm">
-              {post.likes.length} likes
-            </Text>
+            <Actions post={post} />
           </Flex>
         </Flex>
       </Flex>

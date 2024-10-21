@@ -6,10 +6,13 @@ import Actions from "./Actions";
 import useShowToast from "../hooks/useShowToast";
 
 import { formatDistanceToNow } from "date-fns";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { useRecoilValue } from "recoil";
+import userAtom from "../atoms/userAtom";
 
 const Post = ({ post, postedBy }) => {
   const [user, setUser] = useState(null);
-
+  const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
   const showToast = useShowToast();
 
@@ -30,6 +33,25 @@ const Post = ({ post, postedBy }) => {
     };
     getUser();
   }, [postedBy, showToast]);
+
+  const handleDeletePost = async (e) => {
+    try {
+      e.preventDefault();
+      if (!window.confirm("Are you sure you want to delete this post?")) return;
+      const res = await fetch(`/api/posts/${post._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.error) {
+        showToast("Error", data.error, "error");
+        return;
+      }
+      console.log(data);
+      showToast("Success", "Post Deleted", "success");
+    } catch (error) {
+      showToast("Error", error.message, "error");
+    }
+  };
 
   if (!user) return null;
   return (
@@ -112,8 +134,12 @@ const Post = ({ post, postedBy }) => {
                 )}{" "}
                 {" ago"}
               </Text>
+              {currentUser?._id === user._id && (
+                <DeleteIcon size={20} onClick={handleDeletePost} />
+              )}
             </Flex>
           </Flex>
+
           <Text fontSize={"sm"}>{post.text}</Text>
           {post.img && (
             <Box

@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import Conversation from "../components/Conversation.jsx";
-import { GiConversation } from "react-icons/gi";
+// import { GiConversation } from "react-icons/gi";
 import MessageContainer from "../components/MessageContainer.jsx";
 const ChatPage = () => {
   return (

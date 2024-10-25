@@ -6,10 +6,12 @@ import useShowToast from "../hooks/useShowToast";
 import { Flex, Spinner } from "@chakra-ui/react";
 import Post from "../components/Post";
 import useGetUserProfile from "../hooks/useGetUserProfile";
+import { useRecoilState } from "recoil";
+import postsAtom from "../atoms/postsAtom";
 
 const UserPage = () => {
   const { user, loading } = useGetUserProfile();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useRecoilState(postsAtom);
   const showToast = useShowToast();
   const { username } = useParams();
   const [fetchingPosts, setFetchingPosts] = useState(true);
@@ -31,7 +33,7 @@ const UserPage = () => {
     };
 
     getPosts();
-  }, [username, showToast]); //showToast might be required
+  }, [username, showToast, setPosts]); //showToast might be required
   if (!user && loading) {
     return (
       <Flex justifyContent={"center"}>

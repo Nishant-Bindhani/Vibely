@@ -22,9 +22,10 @@ import {
 import React, { useRef, useState } from "react";
 import usePreviewImg from "../hooks/usePreviewImg";
 import { BsFillImageFill } from "react-icons/bs";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "../hooks/useShowToast";
+import postsAtom from "../atoms/postsAtom";
 
 const MAX_CHAR = 500;
 
@@ -35,7 +36,7 @@ const CreatePost = () => {
   const [remainingChar, setremainingChar] = useState(MAX_CHAR);
   const [loading, setLoading] = useState(false);
   const { handleImageChange, imgUrl, setImageUrl } = usePreviewImg();
-
+  const [posts, setPosts] = useRecoilState(postsAtom);
   const showToast = useShowToast();
   const user = useRecoilValue(userAtom);
 
@@ -73,6 +74,7 @@ const CreatePost = () => {
         return;
       }
       showToast("Success", "Post created successfully", "success");
+      setPosts([data, ...posts]);
       onClose();
       setPostText("");
       setImageUrl("");
@@ -88,12 +90,15 @@ const CreatePost = () => {
       <Button
         position={"fixed"}
         bottom={10}
-        right={10}
-        leftIcon={<AddIcon />}
+        right={5}
         bg={useColorModeValue("gray.300", "gray.dark")}
         onClick={onOpen}
+        size={{
+          base: "sm",
+          sm: "md",
+        }}
       >
-        Create Post
+        <AddIcon />
       </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

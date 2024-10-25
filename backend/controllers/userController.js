@@ -4,6 +4,7 @@ import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCooki
 
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from "mongoose";
+import Post from "../models/postModel.js";
 
 const getUserProfile = async (req, res) => {
   const { query } = req.params;
@@ -190,6 +191,17 @@ const updateUser = async (req, res) => {
 
     user = await user.save();
 
+    await Post.updateMany(
+      { "replies.userId": userId },
+      {
+        $set: {
+          "replies.$[reply].username": user.username,
+          "replies.$[reply].userProfilePic": user.profilePic,
+        },
+      },
+
+      { arrayFilters: [{ "reply.userId": userId }] }
+    );
     user.password = null;
 
     res.status(200).json(user);

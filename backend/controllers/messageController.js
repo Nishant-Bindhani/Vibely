@@ -1,4 +1,3 @@
-import { text } from "express";
 import Conversation from "../models/conversationModel.js";
 import Message from "../models/messageModel.js";
 

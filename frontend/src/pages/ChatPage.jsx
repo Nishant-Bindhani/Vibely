@@ -23,6 +23,7 @@ import {
 
 import { useRecoilState, useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom.js";
+import { useSocket } from "../context/SocketContext.jsx";
 
 const ChatPage = () => {
   const showToast = useShowToast();
@@ -37,6 +38,8 @@ const ChatPage = () => {
   const [searchText, setSearchText] = useState("");
 
   const [searchingUser, setSearchingUser] = useState(false);
+
+  const { socket, onlineUsers } = useSocket();
 
   useEffect(() => {
     const getConversations = async () => {
@@ -193,6 +196,9 @@ const ChatPage = () => {
             conversations.map((conversation) => (
               <Conversation
                 key={conversation._id}
+                isOnline={onlineUsers.includes(
+                  conversation.participants[0]._id
+                )}
                 conversation={conversation}
               />
             ))}

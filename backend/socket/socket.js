@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import http from "http";
 import express from "express";
 import Message from "../models/messageModel.js";
+import Conversation from "../models/conversationModel.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -16,6 +17,9 @@ const io = new Server(server, {
 
 export const getRecipientSocketId = (recipientId) => {
   return userSocketMap[recipientId];
+};
+export const getSenderSocketId = (senderId) => {
+  return userSocketMap[senderId];
 };
 const userSocketMap = {};
 
@@ -32,6 +36,10 @@ io.on("connection", (socket) => {
         { $set: { seen: true } }
       );
 
+      await Conversation.updateOne(
+        { _id: conversationId },
+        { $set: { "lastMessage.seen": true } }
+      );
       io.to(userSocketMap[userId]).emit("messagesSeen", { conversationId });
     } catch (error) {
       console.log(error);

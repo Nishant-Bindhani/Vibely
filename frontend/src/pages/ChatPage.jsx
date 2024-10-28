@@ -42,6 +42,26 @@ const ChatPage = () => {
   const { socket, onlineUsers } = useSocket();
 
   useEffect(() => {
+    socket?.on("messagesSeen", ({ conversationId }) => {
+      setConversations((prev) => {
+        const updatedConversations = prev.map((conv) => {
+          if (conv._id === conversationId) {
+            return {
+              ...conv,
+              lastMessage: {
+                ...conv.lastMessage,
+                seen: true,
+              },
+            };
+          }
+          return conv;
+        });
+        return updatedConversations;
+      });
+    });
+  }, [socket, setConversations]);
+
+  useEffect(() => {
     const getConversations = async () => {
       try {
         const res = await fetch("/api/messages/conversations");

@@ -106,6 +106,7 @@ const MessageInput = ({ setMessages }) => {
           hidden
           ref={imageRef}
           onChange={handleImageChange}
+          accept="image/*"
         />
       </Flex>
       <Modal

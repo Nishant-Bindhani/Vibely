@@ -1,10 +1,15 @@
 import React from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import useShowToast from "./useShowToast";
+import { selectedConversationAtom } from "../atoms/messagesAtom";
 
 const useLogout = () => {
   const setUser = useSetRecoilState(userAtom);
+  const [selectedConversation, setSelectedConversation] = useRecoilState(
+    selectedConversationAtom
+  );
+
   const showToast = useShowToast();
   const logout = async () => {
     try {
@@ -15,13 +20,14 @@ const useLogout = () => {
         },
       });
       const data = await res.json();
-      console.log(data);
+
       if (data.error) {
         showToast("Error", data.error, "error");
         return;
       }
       localStorage.removeItem("user-threads");
       setUser(null);
+
       showToast("Success", "LogOut Successfully", "success");
     } catch (error) {
       showToast("Error", error, "error");

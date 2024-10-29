@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Flex,
-  Image,
-  Skeleton,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Avatar, Box, Flex, Image, Skeleton, Text } from "@chakra-ui/react";
 import { selectedConversationAtom } from "../atoms/messagesAtom";
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
@@ -23,13 +15,11 @@ const Message = ({ ownMessage, message }) => {
         <Flex gap={2} alignSelf={"flex-end"}>
           {message.text && (
             <Flex bg={"green.800"} maxW={"350px"} p={1} borderRadius={"md"}>
-              <Text color={"white"} px={2} fontSize={"small"}>
-                {message.text}
-              </Text>
+              <Text color={"white"}>{message.text}</Text>
               <Box
                 alignSelf={"flex-end"}
                 ml={1}
-                color={message.seen ? "blue.400" : "white"}
+                color={message.seen ? "blue.400" : ""}
                 fontWeight={"bold"}
               >
                 <BsCheck2All size={16} />
@@ -72,12 +62,10 @@ const Message = ({ ownMessage, message }) => {
           {message.text && (
             <Text
               maxW={"350px"}
+              bg={"gray.400"}
               p={1}
-              px={2}
               borderRadius={"md"}
-              fontSize={"small"}
-              bg={useColorModeValue("rgb(54, 69, 79)", "gray.400")}
-              color={useColorModeValue("whitesmoke", "black")}
+              color={"black"}
             >
               {message.text}
             </Text>

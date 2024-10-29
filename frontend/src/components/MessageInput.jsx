@@ -31,7 +31,7 @@ const MessageInput = ({ setMessages }) => {
   const setConversations = useSetRecoilState(conversationsAtom);
   const imageRef = useRef(null);
   const { onClose } = useDisclosure();
-  const { handleImageChange, imgUrl, setImageUrl } = usePreviewImg();
+  const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
   const [isSending, setIsSending] = useState(false);
 
   const handleSendMessage = async (e) => {
@@ -77,7 +77,7 @@ const MessageInput = ({ setMessages }) => {
         return updatedConversations;
       });
       setMessageText("");
-      setImageUrl("");
+      setImgUrl("");
     } catch (error) {
       showToast("Error", error.message, "error");
     } finally {
@@ -106,14 +106,13 @@ const MessageInput = ({ setMessages }) => {
           hidden
           ref={imageRef}
           onChange={handleImageChange}
-          accept="image/*"
         />
       </Flex>
       <Modal
         isOpen={imgUrl}
         onClose={() => {
           onClose();
-          setImageUrl("");
+          setImgUrl("");
         }}
       >
         <ModalOverlay />

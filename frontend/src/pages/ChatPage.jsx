@@ -9,52 +9,45 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-
-import React, { useEffect, useState } from "react";
-import Conversation from "../components/Conversation.jsx";
+import Conversation from "../components/Conversation";
 import { GiConversation } from "react-icons/gi";
-import MessageContainer from "../components/MessageContainer.jsx";
-import useShowToast from "../hooks/useShowToast.js";
-
+import MessageContainer from "../components/MessageContainer";
+import { useEffect, useState } from "react";
+import useShowToast from "../hooks/useShowToast";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   conversationsAtom,
   selectedConversationAtom,
-} from "../atoms/messagesAtom.js";
-
-import { useRecoilState, useRecoilValue } from "recoil";
-import userAtom from "../atoms/userAtom.js";
-import { useSocket } from "../context/SocketContext.jsx";
+} from "../atoms/messagesAtom";
+import userAtom from "../atoms/userAtom";
+import { useSocket } from "../context/SocketContext";
 
 const ChatPage = () => {
-  const showToast = useShowToast();
+  const [searchingUser, setSearchingUser] = useState(false);
   const [loadingConversations, setLoadingConversations] = useState(true);
-  const [conversations, setConversations] = useRecoilState(conversationsAtom);
+  const [searchText, setSearchText] = useState("");
   const [selectedConversation, setSelectedConversation] = useRecoilState(
     selectedConversationAtom
   );
-
+  const [conversations, setConversations] = useRecoilState(conversationsAtom);
   const currentUser = useRecoilValue(userAtom);
-
-  const [searchText, setSearchText] = useState("");
-
-  const [searchingUser, setSearchingUser] = useState(false);
-
+  const showToast = useShowToast();
   const { socket, onlineUsers } = useSocket();
 
   useEffect(() => {
     socket?.on("messagesSeen", ({ conversationId }) => {
       setConversations((prev) => {
-        const updatedConversations = prev.map((conv) => {
-          if (conv?._id === conversationId) {
+        const updatedConversations = prev.map((conversation) => {
+          if (conversation._id === conversationId) {
             return {
-              ...conv,
+              ...conversation,
               lastMessage: {
-                ...conv.lastMessage,
+                ...conversation.lastMessage,
                 seen: true,
               },
             };
           }
-          return conv;
+          return conversation;
         });
         return updatedConversations;
       });
@@ -78,6 +71,7 @@ const ChatPage = () => {
         setLoadingConversations(false);
       }
     };
+
     getConversations();
   }, [showToast, setConversations]);
 
@@ -92,24 +86,22 @@ const ChatPage = () => {
         return;
       }
 
-      //if user is trying to message  himself
-      const messagingYourself = searchedUser?._id === currentUser?._id;
+      const messagingYourself = searchedUser._id === currentUser._id;
       if (messagingYourself) {
         showToast("Error", "You cannot message yourself", "error");
         return;
       }
 
-      //if user is already in a conversation with the searched user
       const conversationAlreadyExists = conversations.find(
-        (conversation) =>
-          conversation.participants[0]?._id === searchedUser?._id
+        (conversation) => conversation.participants[0]._id === searchedUser._id
       );
+
       if (conversationAlreadyExists) {
         setSelectedConversation({
-          _id: conversationAlreadyExists?._id,
-          userId: searchedUser?._id,
-          userProfilePic: searchedUser.profilePic,
+          _id: conversationAlreadyExists._id,
+          userId: searchedUser._id,
           username: searchedUser.username,
+          userProfilePic: searchedUser.profilePic,
         });
         return;
       }
@@ -121,10 +113,9 @@ const ChatPage = () => {
           sender: "",
         },
         _id: Date.now(),
-
         participants: [
           {
-            _id: searchedUser?._id,
+            _id: searchedUser._id,
             username: searchedUser.username,
             profilePic: searchedUser.profilePic,
           },
@@ -132,7 +123,7 @@ const ChatPage = () => {
       };
       setConversations((prevConvs) => [...prevConvs, mockConversation]);
     } catch (error) {
-      showToast("Error", "Cannot Be Empty", "error");
+      showToast("Error", error.message, "error");
     } finally {
       setSearchingUser(false);
     }
@@ -142,20 +133,13 @@ const ChatPage = () => {
     <Box
       position={"absolute"}
       left={"50%"}
-      transform={"translateX(-50%)"}
-      w={{
-        base: "100%",
-        md: "80%",
-        lg: "750px",
-      }}
+      w={{ base: "100%", md: "80%", lg: "750px" }}
       p={4}
+      transform={"translateX(-50%)"}
     >
       <Flex
         gap={4}
-        flexDirection={{
-          base: "column",
-          md: "row",
-        }}
+        flexDirection={{ base: "column", md: "row" }}
         maxW={{
           sm: "400px",
           md: "full",
@@ -166,10 +150,7 @@ const ChatPage = () => {
           flex={30}
           gap={2}
           flexDirection={"column"}
-          maxW={{
-            sm: "250px",
-            md: "full",
-          }}
+          maxW={{ sm: "250px", md: "full" }}
           mx={"auto"}
         >
           <Text
@@ -179,39 +160,32 @@ const ChatPage = () => {
             Your Conversations
           </Text>
           <form onSubmit={handleConversationSearch}>
-            <Flex
-              alignItems={"center"}
-              gap={2}
-              bg={useColorModeValue("#f2f5fa", "gray.dark")}
-              border={"transparent"}
-            >
+            <Flex alignItems={"center"} gap={2}>
               <Input
-                placeholder="Search User.."
+                placeholder="Search for a user"
                 onChange={(e) => setSearchText(e.target.value)}
-                value={searchText}
-                _hover={{ boxShadow: "none", outline: "none" }}
               />
               <Button
                 size={"sm"}
                 onClick={handleConversationSearch}
                 isLoading={searchingUser}
-                _hover={{ boxShadow: "none", outline: "none" }}
               >
                 <SearchIcon />
               </Button>
             </Flex>
           </form>
+
           {loadingConversations &&
             [0, 1, 2, 3, 4].map((_, i) => (
               <Flex
                 key={i}
                 gap={4}
-                alignContent={"center"}
-                p={1}
+                alignItems={"center"}
+                p={"1"}
                 borderRadius={"md"}
               >
                 <Box>
-                  <SkeletonCircle size={10} />
+                  <SkeletonCircle size={"10"} />
                 </Box>
                 <Flex w={"full"} flexDirection={"column"} gap={3}>
                   <Skeleton h={"10px"} w={"80px"} />
@@ -219,18 +193,19 @@ const ChatPage = () => {
                 </Flex>
               </Flex>
             ))}
+
           {!loadingConversations &&
             conversations.map((conversation) => (
               <Conversation
-                key={conversation?._id}
+                key={conversation._id}
                 isOnline={onlineUsers.includes(
-                  conversation.participants[0]?._id
+                  conversation.participants[0]._id
                 )}
                 conversation={conversation}
               />
             ))}
         </Flex>
-        {!selectedConversation?._id && (
+        {!selectedConversation._id && (
           <Flex
             flex={70}
             borderRadius={"md"}
@@ -241,11 +216,11 @@ const ChatPage = () => {
             height={"400px"}
           >
             <GiConversation size={100} />
-            <Text>Select a conversation to start messaging</Text>
+            <Text fontSize={20}>Select a conversation to start messaging</Text>
           </Flex>
         )}
 
-        {selectedConversation?._id && <MessageContainer />}
+        {selectedConversation._id && <MessageContainer />}
       </Flex>
     </Box>
   );

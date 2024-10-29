@@ -45,7 +45,7 @@ const ChatPage = () => {
     socket?.on("messagesSeen", ({ conversationId }) => {
       setConversations((prev) => {
         const updatedConversations = prev.map((conv) => {
-          if (conv??._id === conversationId) {
+          if (conv?._id === conversationId) {
             return {
               ...conv,
               lastMessage: {
@@ -93,7 +93,7 @@ const ChatPage = () => {
       }
 
       //if user is trying to message  himself
-      const messagingYourself = searchedUser??._id === currentUser?._id;
+      const messagingYourself = searchedUser?._id === currentUser?._id;
       if (messagingYourself) {
         showToast("Error", "You cannot message yourself", "error");
         return;
@@ -101,7 +101,8 @@ const ChatPage = () => {
 
       //if user is already in a conversation with the searched user
       const conversationAlreadyExists = conversations.find(
-        (conversation) => conversation.participants[0]?._id === searchedUser?._id
+        (conversation) =>
+          conversation.participants[0]?._id === searchedUser?._id
       );
       if (conversationAlreadyExists) {
         setSelectedConversation({

@@ -8,9 +8,10 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import React, { useRef, useState } from "react";
 import Message from "./Message";
 import MessageInput from "./MessageInput";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import useShowToast from "../hooks/useShowToast";
 import {
   conversationsAtom,
@@ -18,8 +19,9 @@ import {
 } from "../atoms/messagesAtom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
-import { useSocket } from "../context/SocketContext.jsx";
+import { useSocket } from "../context/SocketContext";
 import messageSound from "../assets/sounds/message.mp3";
+
 const MessageContainer = () => {
   const showToast = useShowToast();
   const selectedConversation = useRecoilValue(selectedConversationAtom);
@@ -36,7 +38,6 @@ const MessageContainer = () => {
         setMessages((prev) => [...prev, message]);
       }
 
-      // make a sound if the window is not focused
       if (!document.hasFocus()) {
         const sound = new Audio(messageSound);
         sound.play();
@@ -121,13 +122,19 @@ const MessageContainer = () => {
   return (
     <Flex
       flex="70"
-      bg={useColorModeValue("gray.200", "gray.dark")}
+      bg={useColorModeValue("#f2f5fa", "gray.dark")}
       borderRadius={"md"}
       p={2}
       flexDirection={"column"}
     >
       {/* Message header */}
-      <Flex w={"full"} h={12} alignItems={"center"} gap={2}>
+      <Flex
+        w={"full"}
+        h={12}
+        alignItems={"center"}
+        gap={2}
+        borderBottom={useColorModeValue("1px solid rgb(211, 211, 211)", "none")}
+      >
         <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
         <Text display={"flex"} alignItems={"center"}>
           {selectedConversation.username}{" "}

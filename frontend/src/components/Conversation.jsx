@@ -6,52 +6,53 @@ import {
   Image,
   Stack,
   Text,
-  WrapItem,
   useColorMode,
   useColorModeValue,
+  WrapItem,
 } from "@chakra-ui/react";
+import React from "react";
+import { BsFillImageFill } from "react-icons/bs";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { BsCheck2All } from "react-icons/bs";
 import userAtom from "../atoms/userAtom";
-import { BsCheck2All, BsFillImageFill } from "react-icons/bs";
 import { selectedConversationAtom } from "../atoms/messagesAtom";
 
 const Conversation = ({ conversation, isOnline }) => {
   const user = conversation.participants[0];
   const currentUser = useRecoilValue(userAtom);
   const lastMessage = conversation.lastMessage;
+
   const [selectedConversation, setSelectedConversation] = useRecoilState(
     selectedConversationAtom
   );
-  const colorMode = useColorMode();
 
-  console.log("selectedConverstion", selectedConversation);
+  const colourMode = useColorMode();
+
   return (
     <Flex
       gap={4}
       alignItems={"center"}
-      p={"1"}
+      p={1}
       _hover={{
         cursor: "pointer",
-        bg: useColorModeValue("gray.600", "gray.dark"),
-        color: "white",
+        bg: useColorModeValue("whitesmoke", "gray.dark"),
+        color: useColorModeValue("gray.dark", "gray.600"),
       }}
+      borderRadius={"md"}
       onClick={() =>
         setSelectedConversation({
           _id: conversation._id,
           userId: user._id,
-          userProfilePic: user.profilePic,
           username: user.username,
+          userProfilePic: user.profilePic,
           mock: conversation.mock,
         })
       }
       bg={
         selectedConversation?._id === conversation._id
-          ? colorMode === "light"
-            ? "gray.400"
-            : "gray.dark"
+          ? useColorModeValue("#f2f5fa", "gray.dark")
           : ""
       }
-      borderRadius={"md"}
     >
       <WrapItem>
         <Avatar
@@ -65,7 +66,6 @@ const Conversation = ({ conversation, isOnline }) => {
           {isOnline ? <AvatarBadge boxSize="1em" bg="green.500" /> : ""}
         </Avatar>
       </WrapItem>
-
       <Stack direction={"column"} fontSize={"sm"}>
         <Text fontWeight="700" display={"flex"} alignItems={"center"}>
           {user.username} <Image src="/verified.png" w={4} h={4} ml={1} />
@@ -78,8 +78,8 @@ const Conversation = ({ conversation, isOnline }) => {
           ) : (
             ""
           )}
-          {lastMessage.text.length > 18
-            ? lastMessage.text.substring(0, 18) + "..."
+          {lastMessage.text.length > 13
+            ? lastMessage.text.substring(0, 13) + "..."
             : lastMessage.text || <BsFillImageFill size={16} />}
         </Text>
       </Stack>

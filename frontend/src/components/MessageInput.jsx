@@ -31,7 +31,7 @@ const MessageInput = ({ setMessages }) => {
   const setConversations = useSetRecoilState(conversationsAtom);
   const imageRef = useRef(null);
   const { onClose } = useDisclosure();
-  const { handleImageChange, imgUrl, setImgUrl } = usePreviewImg();
+  const { handleImageChange, imgUrl, setImageUrl } = usePreviewImg();
   const [isSending, setIsSending] = useState(false);
 
   const handleSendMessage = async (e) => {
@@ -77,7 +77,7 @@ const MessageInput = ({ setMessages }) => {
         return updatedConversations;
       });
       setMessageText("");
-      setImgUrl("");
+      setImageUrl("");
     } catch (error) {
       showToast("Error", error.message, "error");
     } finally {
@@ -112,7 +112,7 @@ const MessageInput = ({ setMessages }) => {
         isOpen={imgUrl}
         onClose={() => {
           onClose();
-          setImgUrl("");
+          setImageUrl("");
         }}
       >
         <ModalOverlay />

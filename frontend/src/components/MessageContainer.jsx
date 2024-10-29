@@ -40,6 +40,7 @@ const MessageContainer = () => {
 
       if (
         !document.hasFocus() ||
+        selectedConversation._id !== message.conversationId ||
         selectedConversation._id !== message.conversationId
       ) {
         const sound = new Audio(messageSound);

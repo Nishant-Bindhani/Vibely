@@ -35,8 +35,8 @@ const Conversation = ({ conversation, isOnline }) => {
       p={1}
       _hover={{
         cursor: "pointer",
-        bg: useColorModeValue("gray.600", "gray.dark"),
-        color: "white",
+        bg: useColorModeValue("whitesmoke", "gray.dark"),
+        color: useColorModeValue("gray.dark", "gray.600"),
       }}
       borderRadius={"md"}
       onClick={() =>
@@ -50,9 +50,7 @@ const Conversation = ({ conversation, isOnline }) => {
       }
       bg={
         selectedConversation?._id === conversation._id
-          ? colourMode === "light"
-            ? "gray.600"
-            : "gray.dark"
+          ? useColorModeValue("#f2f5fa", "gray.dark")
           : ""
       }
     >
@@ -80,8 +78,8 @@ const Conversation = ({ conversation, isOnline }) => {
           ) : (
             ""
           )}
-          {lastMessage.text.length > 18
-            ? lastMessage.text.substring(0, 18) + "..."
+          {lastMessage.text.length > 13
+            ? lastMessage.text.substring(0, 13) + "..."
             : lastMessage.text || <BsFillImageFill size={16} />}
         </Text>
       </Stack>

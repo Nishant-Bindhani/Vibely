@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { BsInstagram } from "react-icons/bs";
 import { CgMoreO } from "react-icons/cg";
-import React, { useState } from "react";
+
 import { useRecoilValue } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { Link as RouterLink } from "react-router-dom";
@@ -62,18 +62,19 @@ const UserHeader = ({ user }) => {
                 lg: "md",
               }}
               bg={"gray.dark"}
-              color={"gray.light"}
-              p={1}
+              color={"gray.300"}
+              py={1}
+              px={2}
               borderRadius={"full"}
             >
-              threads.net
+              vibely.net
             </Text>
           </Flex>
         </Box>
         <Box>
           {user.profilePic && (
             <Avatar
-              name="Mark Zuckerberg"
+              name="default user"
               src={user.profilePic}
               size={{
                 base: "lg",
@@ -83,7 +84,7 @@ const UserHeader = ({ user }) => {
           )}
           {!user.profilePic && (
             <Avatar
-              name="Mark Zuckerberg"
+              name="default user"
               src="/user.png"
               size={{
                 base: "lg",
@@ -97,7 +98,6 @@ const UserHeader = ({ user }) => {
 
       {currentUser?._id === user._id && (
         <Link as={RouterLink} to={"/update"}>
-          {/*client side routing not refreshing */}
           <Button size={"sm"}>Update Profile</Button>
         </Link>
       )}
@@ -165,12 +165,15 @@ const UserHeader = ({ user }) => {
             colorMode === "dark" ? `white` : `black`
           }`}
           justifyContent={"center"}
-          pb="3"
+          pb="2"
+          mb={2}
           cursor={"pointer"}
         >
-          <Text fontWeight={"bold"}>Threads</Text>
+          <Text fontWeight={"bold"} fontFamily={"sans-serif"}>
+            Your Posts
+          </Text>
         </Flex>
-        <Flex
+        {/* <Flex
           flex={1}
           borderBottom={"1px solid gray"}
           justifyContent={"center"}
@@ -179,7 +182,7 @@ const UserHeader = ({ user }) => {
           cursor={"pointer"}
         >
           <Text fontWeight={"bold"}>Replies</Text>
-        </Flex>
+        </Flex> */}
       </Flex>
     </VStack>
   );

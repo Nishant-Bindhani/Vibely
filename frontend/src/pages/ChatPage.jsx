@@ -91,7 +91,6 @@ const ChatPage = () => {
         showToast("Error", searchedUser.error, "error");
         return;
       }
-      console.log(searchedUser);
 
       //if user is trying to message  himself
       const messagingYourself = searchedUser._id === currentUser._id;
@@ -132,7 +131,7 @@ const ChatPage = () => {
       };
       setConversations((prevConvs) => [...prevConvs, mockConversation]);
     } catch (error) {
-      showToast("Error", error.message, "error");
+      showToast("Error", "Cannot Be Empty", "error");
     } finally {
       setSearchingUser(false);
     }
@@ -179,16 +178,23 @@ const ChatPage = () => {
             Your Conversations
           </Text>
           <form onSubmit={handleConversationSearch}>
-            <Flex alignItems={"center"} gap={2}>
+            <Flex
+              alignItems={"center"}
+              gap={2}
+              bg={useColorModeValue("#f2f5fa", "gray.dark")}
+              border={"transparent"}
+            >
               <Input
-                placeholder="Search for a user"
+                placeholder="Search User.."
                 onChange={(e) => setSearchText(e.target.value)}
                 value={searchText}
+                _hover={{ boxShadow: "none", outline: "none" }}
               />
               <Button
                 size={"sm"}
                 onClick={handleConversationSearch}
                 isLoading={searchingUser}
+                _hover={{ boxShadow: "none", outline: "none" }}
               >
                 <SearchIcon />
               </Button>

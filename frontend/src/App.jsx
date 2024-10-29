@@ -18,7 +18,7 @@ function App() {
   const user = useRecoilValue(userAtom);
   const { pathname } = useLocation();
   return (
-    <Box position={"relative"} w={"full"}>
+    <Box position={"relative"} w={"full"} mt={0}>
       <Container
         maxW={pathname === "/" ? { base: "620px", md: "900px" } : "620px"}
       >

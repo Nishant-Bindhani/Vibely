@@ -1,4 +1,13 @@
-import { Avatar, Box, Center, Flex, Image, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Center,
+  Flex,
+  Image,
+  Text,
+  useColorMode,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -12,6 +21,7 @@ import userAtom from "../atoms/userAtom";
 import postsAtom from "../atoms/postsAtom";
 
 const Post = ({ post, postedBy }) => {
+  const colourMode = useColorMode();
   const [user, setUser] = useState(null);
   const currentUser = useRecoilValue(userAtom);
   const navigate = useNavigate();
@@ -58,7 +68,22 @@ const Post = ({ post, postedBy }) => {
   if (!user) return null;
   return (
     <Link to={`/${user.username}/post/${post._id}`}>
-      <Flex gap={3} mb={4} py={4}>
+      <Flex
+        gap={3}
+        mb={4}
+        pt={5}
+        pb={7}
+        px={5}
+        bg={useColorModeValue("gray.200", "#0a0a0a")}
+        borderBottom={useColorModeValue(
+          "1px solid rgb(211, 211, 211)",
+          "1px solid rgb(40, 40, 43)"
+        )}
+        borderRight={useColorModeValue("2px solid rgb(211, 211, 211)", "none")}
+        borderLeft={useColorModeValue("0.2px solid rgb(211, 211, 211)", "none")}
+        borderRadius={useColorModeValue("7px", "4px")}
+        boxShadow={useColorModeValue("5px 0 5px -6px #888", "none")}
+      >
         <Flex flexDirection={"column"} alignItems={"center"}>
           <Avatar
             size={"md"}
@@ -144,12 +169,7 @@ const Post = ({ post, postedBy }) => {
 
           <Text fontSize={"sm"}>{post.text}</Text>
           {post.img && (
-            <Box
-              borderRadius={6}
-              overflow={"hidden"}
-              border={"1px solid"}
-              borderColor={"gray.light"}
-            >
+            <Box borderRadius={6} overflow={"hidden"}>
               <Image src={post.img} w={"full"} />
             </Box>
           )}

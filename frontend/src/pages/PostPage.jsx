@@ -7,6 +7,7 @@ import {
   Image,
   Spinner,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 // import { BsThreeDots } from "react-icons/bs";
 import Actions from "../components/Actions";
@@ -79,7 +80,20 @@ const PostPage = () => {
   if (!currentPost) return null;
 
   return (
-    <>
+    <Box
+      mb={2}
+      py={5}
+      px={5}
+      bg={useColorModeValue("gray.200", "#0a0a0a")}
+      borderBottom={useColorModeValue(
+        "1px solid rgb(211, 211, 211)",
+        "1px solid rgb(40, 40, 43)"
+      )}
+      borderRight={useColorModeValue("2px solid rgb(211, 211, 211)", "none")}
+      borderLeft={useColorModeValue("0.2px solid rgb(211, 211, 211)", "none")}
+      borderRadius={useColorModeValue("7px", "4px")}
+      boxShadow={useColorModeValue("5px 0 5px -6px #888", "none")}
+    >
       <Flex>
         <Flex w={"full"} alignItems={"center"} gap={3}>
           <Avatar src={user.profilePic} size={"md"} name="Mark Zuckerberg" />
@@ -108,13 +122,9 @@ const PostPage = () => {
           )}
         </Flex>
       </Flex>
+
       <Text my={3}>{currentPost.text}</Text>
-      <Box
-        borderRadius={6}
-        overflow={"hidden"}
-        border={"1px solid"}
-        borderColor={"gray.light"}
-      >
+      <Box borderRadius={6} overflow={"hidden"}>
         {currentPost.img && <Image src={currentPost.img} w={"full"} />}
       </Box>
       <Flex gap={3} my={3}>
@@ -142,7 +152,7 @@ const PostPage = () => {
           }
         />
       ))}
-    </>
+    </Box>
   );
 };
 

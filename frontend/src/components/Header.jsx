@@ -1,4 +1,11 @@
-import { Button, Flex, Image, Link, useColorMode } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  Image,
+  Link,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
@@ -17,7 +24,7 @@ const Header = () => {
   const setAuthScreen = useSetRecoilState(authScreenAtom);
 
   return (
-    <Flex justifyContent={"space-between"} mt={"6"} mb={"12"}>
+    <Flex justifyContent={"space-between"} mt={"6"} mb={"8"}>
       {user && (
         <Link as={RouterLink} to="/">
           <AiFillHome size={24} />
@@ -32,13 +39,25 @@ const Header = () => {
           Login
         </Link>
       )}
-      <Image
-        cursor={"pointer"}
-        alt="logo"
-        w={6}
-        src={colorMode === "dark" ? "/light-logo.svg" : "/dark-logo.svg"}
-        onClick={toggleColorMode}
-      />
+      <Flex>
+        <Image
+          cursor={"pointer"}
+          alt="logo"
+          w={9}
+          h={9}
+          src={colorMode === "dark" ? "/test-white.png" : "/test-removebg1.png"}
+          onClick={toggleColorMode}
+        />
+        <Text
+          fontSize={"medium"}
+          mt={4}
+          fontFamily={"Dancing Script"}
+          alignSelf={"flex-end"}
+          fontWeight={"700"}
+        >
+          Vibely
+        </Text>
+      </Flex>
 
       {user && (
         <Flex alignItems={"center"} gap={4}>
@@ -51,12 +70,11 @@ const Header = () => {
           <Link as={RouterLink} to={`/settings`}>
             <MdOutlineSettings size={20} />
           </Link>
-          <Button size={"xs"} onClick={logout}>
+          <Button size={"xs"} onClick={logout} bg={"inherit"}>
             <FiLogOut size={20} />
           </Button>
         </Flex>
       )}
-
       {!user && (
         <Link
           as={RouterLink}

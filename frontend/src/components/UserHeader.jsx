@@ -110,8 +110,9 @@ const UserHeader = ({ user }) => {
       <Flex w={"full"} justifyContent={"space-between"}>
         <Flex gap={2} alignItems={"center"}>
           <Text color={"gray.light"}> {user.followers.length} Followers</Text>
+
           <Box w="1" h="1" bg={"gray.light"} borderRadius={"full"} />
-          <Link color={"gray.light"}>instagram.com</Link>
+          <Text color={"gray.light"}> {user.following.length} Following</Text>
         </Flex>
         <Flex>
           {/* Icon Container with background color and icon color transition */}

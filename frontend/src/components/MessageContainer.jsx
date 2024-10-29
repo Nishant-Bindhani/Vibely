@@ -20,23 +20,27 @@ import {
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import userAtom from "../atoms/userAtom";
 import { useSocket } from "../context/SocketContext";
+import messageSound from "../assets/sounds/message.mp3";
 
 const MessageContainer = () => {
-  const { socket } = useSocket();
   const showToast = useShowToast();
   const selectedConversation = useRecoilValue(selectedConversationAtom);
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [messages, setMessages] = useState([]);
   const currentUser = useRecoilValue(userAtom);
-
+  const { socket } = useSocket();
   const setConversations = useSetRecoilState(conversationsAtom);
-
   const messageEndRef = useRef(null);
 
   useEffect(() => {
     socket.on("newMessage", (message) => {
       if (selectedConversation._id === message.conversationId) {
-        setMessages((prevMessages) => [...prevMessages, message]);
+        setMessages((prev) => [...prev, message]);
+      }
+
+      if (!document.hasFocus()) {
+        const sound = new Audio(messageSound);
+        sound.play();
       }
 
       setConversations((prev) => {
@@ -89,6 +93,10 @@ const MessageContainer = () => {
   }, [socket, currentUser._id, messages, selectedConversation]);
 
   useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  useEffect(() => {
     const getMessages = async () => {
       setLoadingMessages(true);
       setMessages([]);
@@ -100,7 +108,6 @@ const MessageContainer = () => {
           showToast("Error", data.error, "error");
           return;
         }
-        // console.log(data);
         setMessages(data);
       } catch (error) {
         showToast("Error", error.message, "error");
@@ -108,22 +115,19 @@ const MessageContainer = () => {
         setLoadingMessages(false);
       }
     };
+
     getMessages();
   }, [showToast, selectedConversation.userId, selectedConversation.mock]);
 
-  useEffect(() => {
-    console.log("Messages updated:", messages);
-    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   return (
     <Flex
-      flex={"70"}
+      flex="70"
       bg={useColorModeValue("gray.200", "gray.dark")}
       borderRadius={"md"}
-      flexDirection={"column"}
       p={2}
+      flexDirection={"column"}
     >
+      {/* Message header */}
       <Flex w={"full"} h={12} alignItems={"center"} gap={2}>
         <Avatar src={selectedConversation.userProfilePic} size={"sm"} />
         <Text display={"flex"} alignItems={"center"}>
@@ -131,14 +135,16 @@ const MessageContainer = () => {
           <Image src="/verified.png" w={4} h={4} ml={1} />
         </Text>
       </Flex>
+
       <Divider />
+
       <Flex
         flexDir={"column"}
         gap={4}
         my={4}
+        p={2}
         height={"400px"}
         overflowY={"auto"}
-        p={2}
       >
         {loadingMessages &&
           [...Array(5)].map((_, i) => (
@@ -152,13 +158,14 @@ const MessageContainer = () => {
             >
               {i % 2 === 0 && <SkeletonCircle size={7} />}
               <Flex flexDir={"column"} gap={2}>
-                <Skeleton h={"8px"} w={"250px"} />
-                <Skeleton h={"8px"} w={"250px"} />
-                <Skeleton h={"8px"} w={"250px"} />
+                <Skeleton h="8px" w="250px" />
+                <Skeleton h="8px" w="250px" />
+                <Skeleton h="8px" w="250px" />
               </Flex>
               {i % 2 !== 0 && <SkeletonCircle size={7} />}
             </Flex>
           ))}
+
         {!loadingMessages &&
           messages.map((message) => (
             <Flex
@@ -177,6 +184,7 @@ const MessageContainer = () => {
             </Flex>
           ))}
       </Flex>
+
       <MessageInput setMessages={setMessages} />
     </Flex>
   );

@@ -1,6 +1,8 @@
 import express from "express";
 import {
-  followUnfollowUser,
+  followUnFollowUser,
+  freezeAccount,
+  getSuggestedUsers,
   getUserProfile,
   loginUser,
   logoutUser,
@@ -15,13 +17,9 @@ router.get("/profile/:query", getUserProfile);
 router.post("/signup", signupUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
-router.post("/follow/:id", protectRoute, followUnfollowUser);
+router.post("/follow/:id", protectRoute, followUnFollowUser);
 router.put("/update/:id", protectRoute, updateUser);
-
-//login
-
-//update profile
-
-//follow
+router.get("/suggested", protectRoute, getSuggestedUsers);
+router.put("/freeze", protectRoute, freezeAccount);
 
 export default router;

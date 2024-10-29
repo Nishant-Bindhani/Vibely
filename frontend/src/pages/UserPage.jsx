@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import UserHeader from "../components/UserHeader";
-
 import { useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
 import { Flex, Spinner } from "@chakra-ui/react";
@@ -11,13 +10,14 @@ import postsAtom from "../atoms/postsAtom";
 
 const UserPage = () => {
   const { user, loading } = useGetUserProfile();
-  const [posts, setPosts] = useRecoilState(postsAtom);
-  const showToast = useShowToast();
   const { username } = useParams();
+  const showToast = useShowToast();
+  const [posts, setPosts] = useRecoilState(postsAtom);
   const [fetchingPosts, setFetchingPosts] = useState(true);
 
   useEffect(() => {
     const getPosts = async () => {
+      if (!user) return;
       setFetchingPosts(true);
       try {
         const res = await fetch(`/api/posts/user/${username}`);
@@ -33,22 +33,23 @@ const UserPage = () => {
     };
 
     getPosts();
-  }, [username, showToast, setPosts]); //showToast might be required
+  }, [username, showToast, setPosts, user]);
+
   if (!user && loading) {
     return (
       <Flex justifyContent={"center"}>
-        <Spinner size="xl" />;
+        <Spinner size={"xl"} />
       </Flex>
     );
   }
-  if (!user && !loading) return <h1>User Not Found</h1>;
+
+  if (!user && !loading) return <h1>User not found</h1>;
+
   return (
     <>
       <UserHeader user={user} />
-      {!fetchingPosts && posts.length === 0 && (
-        <h1>User has not posted anything</h1>
-      )}
 
+      {!fetchingPosts && posts.length === 0 && <h1>User has not posts.</h1>}
       {fetchingPosts && (
         <Flex justifyContent={"center"} my={12}>
           <Spinner size={"xl"} />

@@ -6,7 +6,7 @@
 
 - 🔐 **User Authentication**: Secure user registration and login using JWT tokens.
 - 💬 **Real-Time Chat**: Instantly message friends using Socket.io for real-time communication.
-- 🖼️ **Posts and Media Sharing**: Users can create and share posts, images, and videos, with uploads managed by Cloudinary.
+- 🖼️ **Posts and Media**: Users can create posts, images with uploads managed by Cloudinary.
 - 💻 **Responsive UI**: Developed with Chakra UI for a visually appealing, responsive user interface.
 - 🌐 **Global State Management**: RecoilJS handles global state in the frontend for optimal performance.
 
